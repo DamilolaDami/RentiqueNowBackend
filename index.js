@@ -1,7 +1,9 @@
 const express = require('express');
 const userRoutes = require('./routes/userRoutes'); // Import the user routes
 const app = express();
-
+//add cors
+const cors = require('cors');
+app.use(cors());
 // Middleware to parse incoming JSON requests
 
 app.use(express.json());
