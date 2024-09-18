@@ -12,16 +12,14 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET a user by ID
-router.get('/:id', async (req, res, next) => {
+router.get('/:uid', async (req, res, next) => {
   try {
     const user = await req.prisma.user.findUnique({
-      where: { id: parseInt(req.params.id) },
+      where: { uid: req.params.uid },
     });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
     res.json(user);
-  } catch (err) {
+  }
+  catch (err) {
     next(err);
   }
 });
