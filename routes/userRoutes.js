@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db.js'); // Import the database connection
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // GET all users
 router.get('/', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM User');
-    res.json(result.rows);
+    const users = await prisma.user.findMany();
+    res.json(users);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error: Unable to retrieve users, reasom: ' + err.message);
+    res.status(500).send('Server Error: Unable to retrieve users');
   }
 });
 
@@ -17,11 +18,13 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db.query('SELECT * FROM User WHERE id = $1', [id]);
-    if (result.rows.length === 0) {
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json(result.rows[0]);
+    res.json(user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -32,47 +35,56 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const { name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber } = req.body;
   try {
-    const result = await db.query(
-      'INSERT INTO User (name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber]
-    );
-    res.status(201).json(result.rows[0]);
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        pushNotificationToken,
+        userType,
+        uid,
+        photoUrl,
+        phoneNumber,
+      },
+    });
+    res.status(201).json(newUser);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
 
+// Check if a user exists by uid
 router.get('/checkUser/:uid', async (req, res) => {
   const { uid } = req.params;
   try {
-    const result = await db.query('SELECT * FROM User WHERE uid = $1', [uid]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'false' });
-    }
-    res.json({ message: 'true' });
+    const user = await prisma.user.findUnique({
+      where: { uid },
+    });
+    res.json({ exists: !!user });
   } catch (err) {
     console.error(err.message);
-    //send all columns of the user
-    const columns = await db.query('SELECT * FROM User');
-    const columnNames = columns.rows.map((column) => column.column_name);
-    res.status(500).send('Server Error" message: columns available: ' + columnNames);
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 
 // PUT (update) a user by ID
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, email, pushNotificationToken, userType, uid } = req.body;
+  const { name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber } = req.body;
   try {
-    const result = await db.query(
-      'UPDATE User SET name = $1, email = $2, pushNotificationToken = $3, userType = $4, uid = $5 WHERE id = $6 RETURNING *',
-      [name, email, pushNotificationToken, userType, uid, id]
-    );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.json(result.rows[0]);
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(id) },
+      data: {
+        name,
+        email,
+        pushNotificationToken,
+        userType,
+        uid,
+        photoUrl,
+        phoneNumber,
+      },
+    });
+    res.json(updatedUser);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -83,10 +95,9 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db.query('DELETE FROM User WHERE id = $1 RETURNING *', [id]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+    await prisma.user.delete({
+      where: { id: parseInt(id) },
+    });
     res.json({ message: 'User deleted successfully' });
   } catch (err) {
     console.error(err.message);
