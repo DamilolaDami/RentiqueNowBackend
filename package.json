@@ -1,19 +1,16 @@
 {
-  "name": "your-project-name",
-  "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "prisma generate"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^4.0.0",
+    "@prisma/client": "4.16.2",
     "cors": "^2.8.5",
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "prisma": "^4.0.0",
+    "prisma": "4.16.2",
     "nodemon": "^2.0.12"
   }
 }
