@@ -55,7 +55,8 @@ router.get('/checkUser/:uid', async (req, res) => {
     console.error(err.message);
     //send all columns of the user
     const columns = await db.query('SELECT * FROM User');
-    res.status(500).send('Server Error" message: columns available: ' + columns);
+    const columnNames = columns.rows.map((column) => column.column_name);
+    res.status(500).send('Server Error" message: columns available: ' + columnNames);
   }
 });
 
