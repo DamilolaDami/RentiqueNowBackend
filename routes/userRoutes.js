@@ -49,13 +49,13 @@ router.get('/checkUser/:uid', async (req, res, next) => {
 });
 
 // PUT (update) a user by ID
-router.put('/:id', async (req, res, next) => {
+router.put('/update/:uid', async (req, res, next) => {
   try {
-    const updatedUser = await req.prisma.user.update({
-      where: { id: parseInt(req.params.id) },
+    const user = await req.prisma.user.update({
+      where: { uid: req.params.uid },
       data: req.body,
     });
-    res.json(updatedUser);
+    res.json(user);
   } catch (err) {
     next(err);
   }
@@ -72,5 +72,7 @@ router.delete('/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+
 
 module.exports = router;
