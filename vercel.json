@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "index.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "prebuild": "npx prisma generate"
+      }
     }
   ],
   "routes": [
@@ -11,15 +14,5 @@
       "src": "/api/(.*)",
       "dest": "/index.js"
     }
-  ],
-  "build": {
-    "env": {
-      "PRISMA_GENERATE": "true"
-    }
-  },
-  "install": {
-    "commands": [
-      "prisma generate"
-    ]
-  }
+  ]
 }
