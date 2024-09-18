@@ -5,7 +5,7 @@ const db = require('../db.js'); // Import the database connection
 // GET all users
 router.get('/', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM users');
+    const result = await db.query('SELECT * FROM User');
     res.json(result.rows);
   } catch (err) {
     console.error(err.message);
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db.query('SELECT * FROM users WHERE id = $1', [id]);
+    const result = await db.query('SELECT * FROM User WHERE id = $1', [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
 router.get('/checkUser/:uid', async (req, res) => {
   const { uid } = req.params;
   try {
-    const result = await db.query('SELECT * FROM users WHERE uid = $1', [uid]);
+    const result = await db.query('SELECT * FROM User WHERE uid = $1', [uid]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'false' });
     }
@@ -63,7 +63,7 @@ router.put('/:id', async (req, res) => {
   const { name, email, pushNotificationToken, userType, uid } = req.body;
   try {
     const result = await db.query(
-      'UPDATE users SET name = $1, email = $2, pushNotificationToken = $3, userType = $4, uid = $5 WHERE id = $6 RETURNING *',
+      'UPDATE User SET name = $1, email = $2, pushNotificationToken = $3, userType = $4, uid = $5 WHERE id = $6 RETURNING *',
       [name, email, pushNotificationToken, userType, uid, id]
     );
     if (result.rows.length === 0) {
@@ -80,7 +80,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+    const result = await db.query('DELETE FROM User WHERE id = $1 RETURNING *', [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
