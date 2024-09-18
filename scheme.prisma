@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Listing {
+  id                   Int      @id @default(autoincrement())
+  hostId               Int
+  title                String
+  description          String?
+  propertyType         String
+  roomType             String
+  address              String
+  city                 String
+  state                String?
+  country              String
+  pricePerNight        Decimal  @db.Decimal(10, 2)
+  numberOfBedrooms     Int
+  numberOfBathrooms    Int
+  maxGuests            Int
+  category             String?
+  allRoomsHaveLocks    Boolean  @default(false)
+  amenities            String[] // This will be stored as an array in PostgreSQL
+  whoElseMightBeThere  String?
+  coverPhoto           String?
+  additionalPhotos     String[] // This will be stored as an array in PostgreSQL
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}

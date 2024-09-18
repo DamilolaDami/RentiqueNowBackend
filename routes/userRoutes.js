@@ -42,6 +42,20 @@ router.post('/', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+//get request to check if user already exists in the database bui uid, return true/false
+router.get('/checkUID/:uid', async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const result = await db.query('SELECT * FROM users WHERE uid = $1', [uid]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'false' });
+    }
+    res.json({ message: 'true' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // PUT (update) a user by ID
 router.put('/:id', async (req, res) => {
