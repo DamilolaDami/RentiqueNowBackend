@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
   const { name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber } = req.body;
   try {
     const result = await db.query(
-      'INSERT INTO users (name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      'INSERT INTO User (name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
       [name, email, pushNotificationToken, userType, uid, photoUrl, phoneNumber]
     );
     res.status(201).json(result.rows[0]);
