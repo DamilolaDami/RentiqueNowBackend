@@ -28,6 +28,7 @@ router.get('/:autoId', async (req, res, next) => {
 
 // POST a new categorie
 router.post('/', async (req, res, next) => {
+    console.log(req.body);
   try {
     const { name, imageUrl } = req.body;
     const newCategory = await req.prisma.category.create({
@@ -38,6 +39,7 @@ router.post('/', async (req, res, next) => {
     });
     res.status(201).json(newCategory);
   } catch (err) {
+    console.log(err);
     next(err);
   }
 });
