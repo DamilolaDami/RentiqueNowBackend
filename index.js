@@ -1,6 +1,7 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const userRoutes = require('./routes/userRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 const cors = require('cors');
 
 const prisma = new PrismaClient();
@@ -16,6 +17,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/users', userRoutes);
+app.use('api/categories', categoryRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

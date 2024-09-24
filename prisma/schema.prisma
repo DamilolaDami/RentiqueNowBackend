@@ -38,12 +38,20 @@ model Listing {
   numberOfBedrooms     Int
   numberOfBathrooms    Int
   maxGuests            Int
-  category             String?
+  categoryId           Int?
+  category             Category? @relation(fields: [categoryId], references: [autoId])
   allRoomsHaveLocks    Boolean  @default(false)
-  amenities            String[] 
+  amenities            String[]
   whoElseMightBeThere  String?
   coverPhoto           String?
-  additionalPhotos     String[] 
+  additionalPhotos     String[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+}
+
+model Category {
+  autoId   Int      @id @default(autoincrement())
+  name     String
+  imageUrl String
+  listings Listing[]  // One-to-Many relationship, a category can have many listings
 }
