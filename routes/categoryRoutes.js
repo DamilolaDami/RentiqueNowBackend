@@ -102,4 +102,29 @@ router.get('/subcategories/:autoId', async (req, res, next) => {
     next(err);
   }
 });
+
+//get all subcategories of a category by passing categoryId
+router.get('/subcategories/:categoryId', async (req, res, next) => {
+  try {
+    const subcategories = await req.prisma.subcategory.findMany({
+      where: { categoryId: parseInt(req.params.categoryId) },
+    });
+    res.json(subcategories);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PUT (update) a subcategory by ID
+router.put('/subcategories/:autoId', async (req, res, next) => {
+  try {
+    const subcategory = await req.prisma.subcategory.update({
+      where: { autoId: parseInt(req.params.autoId) },
+      data: req.body,
+    });
+    res.json(subcategory);
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;
