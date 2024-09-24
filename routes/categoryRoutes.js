@@ -72,4 +72,34 @@ router.delete('/:autoId', async (req, res, next) => {
   }
 });
 
+router.post('/subcategories', upload.none(), async (req, res, next) => {
+  try {
+    const { name, imageUrl, categoryId } = req.body;
+    const newSubcategory = await req.prisma.subcategory.create({
+      data: {
+        name,
+        imageUrl,
+        category: { connect: { autoId: parseInt(categoryId) } }, 
+      },
+    });
+    res.status(201).json(newSubcategory);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/subcategories/:autoId', async (req, res, next) => {
+  try {
+    const subcategory = await req.prisma.subcategory.findUnique({
+      where: { autoId: parseInt(req.params.autoId) },
+      include: { category: false },
+    });
+    if (!subcategory) {
+      return res.status(404).json({ message: 'Subcategory not found' });
+    }
+    res.json(subcategory);
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;
