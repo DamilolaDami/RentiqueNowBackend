@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const upload = multer();
 // GET all categories
 router.get('/', async (req, res, next) => {
   try {
@@ -27,7 +27,7 @@ router.get('/:autoId', async (req, res, next) => {
 });
 
 // POST a new categorie
-router.post('/', async (req, res, next) => {
+router.post('/', upload.none(), async (req, res, next) => {
     console.log(req.body);
   try {
     const { name, imageUrl } = req.body;
