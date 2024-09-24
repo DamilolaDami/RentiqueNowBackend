@@ -3,9 +3,10 @@ const { PrismaClient } = require('@prisma/client');
 const userRoutes = require('./routes/userRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const cors = require('cors');
-
+const multer = require('multer');
 const prisma = new PrismaClient();
 const app = express();
+const upload = multer();
 
 app.use(cors());
 app.use(express.json());
