@@ -9,6 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // for URL-encoded bodies
 
 // Middleware to attach prisma to the request object
 app.use((req, res, next) => {
