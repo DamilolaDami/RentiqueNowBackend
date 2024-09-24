@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/users', userRoutes);
-app.use('api/categories', categoryRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
