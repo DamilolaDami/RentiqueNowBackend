@@ -26,7 +26,7 @@ router.get('/:autoId', async (req, res, next) => {
   }
 });
 
-// POST a new category
+// POST a new categorie
 router.post('/', async (req, res, next) => {
   try {
     const { name, imageUrl } = req.body;
